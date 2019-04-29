@@ -1,0 +1,95 @@
+<div style="padding-left: 10px;padding-top: 10px;padding-right: 10px;margin-bottom: 10px;
+">
+  <mat-card style="background-color: #03a9f4; color:whitesmoke; padding: 7px;">
+    <mat-card-title style="font-size:19px;font-weight:bold">OTHER PATIENT LIST
+
+
+    </mat-card-title>
+
+
+  </mat-card>
+
+
+</div>
+<div style="padding-left:10px;padding-right:10px">
+  <mat-card style="max-height: 45px; padding-top: 2px">
+
+    <label>
+        <div class="row">
+          <div class="col-lg-3 col-md-4 col-sm-12 ">
+  
+            <div class="form-group ">
+              <div class="col-xl">
+                <mat-form-field style="width:100px;margin-top:-5pxpx" id="value">
+  
+                  <input [(ngModel)]="filter" matInput placeholder="Search" type="text">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-lg-3 col-md-4 col-sm-12 " style="padding-left: 100px">
+  
+            <mat-form-field style="width:50px" id="value">
+  
+              <mat-select [(ngModel)]="count" (selectionChange)="showOtherpatients(count)" matInput placeholder="Days">
+                <mat-option value="2">2</mat-option>
+                <mat-option value="7">7</mat-option>
+  
+                <mat-option value="15">15</mat-option>
+  
+                <mat-option value="30">30</mat-option>
+                <mat-option value="All">All</mat-option>
+  
+              </mat-select>
+  
+            </mat-form-field>
+  
+          </div>
+  
+       
+        </div>
+      </label>
+  </mat-card>
+
+</div>
+
+
+
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+<div style="padding-left:10px;margin-top:-5px;padding-right:10px">
+
+  <table width="100%" class="table  table-condensed" style="overflow-y: scroll;">
+    <tbody style="font-size:11px;font-weight: bold">
+      <tr style="background:#03a9f4;color:whitesmoke">
+        <th>S.No</th>
+        <th>RegId
+        </th>
+        <th>UMR#</th>
+        <th>Name</th>
+        <th>Patient Type</th>
+        <th>Date Of Joining</th>
+        <th>ConsultingDr</th>
+        <th>Cost so far</th>
+
+      </tr>
+  
+      <tr *ngFor="let data of other|filter:filter|paginate: { itemsPerPage: 15, currentPage: p };let i=index">
+        <td>{{ 15 * (p - 1) +i+1 }}</td>
+        <td>{{data.regId}}
+        </td>
+        <td> {{data.umr}} </td>
+
+        <td>{{data.name}}</td>
+        <td>{{data.patType}}</td>
+        
+        <td>{{data.DOJ}}</td>
+        <td>{{data.doctor}}</td>
+        <td>{{data.soFar}}</td>
+
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+</div>

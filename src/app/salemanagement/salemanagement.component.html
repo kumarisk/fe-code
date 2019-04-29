@@ -1,0 +1,305 @@
+<div style="padding-left: 10px;padding-top: 10px;padding-right: 10px;margin-bottom: 10px;
+">
+  <div class="fixHeader" id="myHeader">
+    <mat-card style="background-color: #03a9f4; color:white; padding: 7px;">
+      <mat-card-title style="font-size:19px;font-weight:bold">SALE MANAGEMENT
+        <button style="    margin-right: 10px;
+        float: right;
+        background-color: white;
+        color: black !important; margin-top:-5px" class="btn btn-primary mat-ripple" md-ripple="reset" (click)="reset()">RESET</button>&nbsp;
+
+        <button style="    margin-right: 10px;
+      float: right;
+      background-color: white;
+      color: black !important;margin-top:-5px " class="btn btn-primary mat-ripple" md-ripple="submit" [disabled]="!newSale['location']?.length || !patient.name?.length || !patient.mobile?.length"
+          (click)="showModal(basic);">SAVE</button>&nbsp;&nbsp;
+
+      </mat-card-title>
+    </mat-card>
+  </div>
+</div>
+
+
+<!-- [value]="sale.discount || 0" -->
+<div class="content">
+  <div style="padding-left:10px;padding-right:10px">
+    <mat-card id="new" style="padding-left:50px;">
+      <div class="row" style="margin-top:-15px;margin-bottom:-25px">
+        <div class=" col-lg-3 col-md-4 col-sm-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+
+                <input [value]="this.billNo" matInput placeholder="Bill No#" type="text" readonly>
+              </mat-form-field>
+
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-lg-4 col-md-4 col-sm-12"> -->
+            <div class=" col-lg-3 col-md-4 col-sm-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+                <input [value]="this.billDate" matInput [matDatepicker]="picker" placeholder="Bill Date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class=" col-lg-3 col-md-4 col-sm-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+                <input maxlength="10" [(ngModel)]="newSale.regId" matInput (keydown.enter)="findPatient($event)" placeholder="Registration Number"
+                  type="text">
+              </mat-form-field>
+
+            </div>
+          </div>
+        </div>
+        <div class=" col-lg-3 col-md-4 col-sm-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+                <input required name="nameInput" minlength="3" maxlength="50" #uname="ngModel" pattern="^[A-Za-z -]+$" [(ngModel)]="patient.name"
+                  matInput placeholder="Name" type="text">
+              </mat-form-field>
+            </div>
+            <div class="text text-danger" *ngIf="uname.touched && uname.errors?.required">Mandatory(if not entered)</div>
+            <div class="text text-danger" *ngIf="uname.errors?.minlength">name should have min 3 characters</div>
+            <div class="text text-danger" *ngIf="uname.errors?.maxlength">name should have max 50 characters</div>
+            <div class="text text-danger" *ngIf="uname.errors?.pattern">Allow only alphabets</div>
+
+          </div>
+        </div>
+
+        <div class=" col-lg-3 col-md-4 col-sm-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+
+                <input required minlength="10" (input)="checkNumeric($event)" maxlength="10" pattern="[6789][0-9]{9}" #umobile="ngModel"
+                  [(ngModel)]="patient.mobile" matInput placeholder="Mobile Number" type="text">
+              </mat-form-field>
+              <div class="text text-danger" *ngIf="umobile.touched && umobile.errors?.required">Mandatory(if not entered)</div>
+              <div class="text text-danger" *ngIf="umobile.errors?.minlength">mobile should have min 10 digits</div>
+              <div class="text text-danger" *ngIf="umobile.errors?.maxlength">mobile should have max 10 digits</div>
+              <div class="text text-danger" *ngIf="numericError">Allow only numbers</div>
+
+
+            </div>
+          </div>
+        </div>
+        <!-- newSale :: {{ newSale | json}}
+          refSales :: {{ refSales | json}} -->
+      
+        <div class="col-md-4">
+          <div class="form-group ">
+            <div class="col-xl">
+              <mat-form-field>
+                <mat-select required [(ngModel)]="newSale.location" #ulocation="ngModel" placeholder="Location">
+                  <mat-option>...</mat-option>
+                  <mat-option value="Miyapur">Miyapur</mat-option>
+                  <mat-option value="KPHB"> KPHB</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="text text-danger" *ngIf="ulocation.touched && !ulocation.valid">Mandatory(if not entered)</div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <!-- <form [formGroup]="SaleForm">  -->
+
+</div>
+<div class="content">
+  <div style="padding-left:10px;padding-right:10px">
+    <table width="100%" class="table table-bordered table-condensed table-responsive">
+
+      <tr style="background:#03a9f4;color:whitesmoke">
+        <th>Sno</th>
+        <th>Item Name</th>
+        <th>Pack</th>
+        <th>Batch</th>
+
+        <th>Expiry Date</th>
+
+        <th>Qty</th>
+        <th>Avaialble Qty</th>
+        <th>MRP</th>
+
+        <th>Dis%</th>
+        <th>Amount</th>
+        <th>GST</th>
+        <th>Action</th>
+      </tr>
+
+
+      <tr *ngFor="let sale of refSales;let i= index">
+        <td> {{i + 1}}</td>
+        <td>
+          <ng-select appendTo="body" style="width:250px" [items]="medicines" bindLabel="medName" placeholder="Item Name" (change)="onMedicineChange($event, sale);setDetails(sale);setBatches(sale)">
+          </ng-select>
+        </td>
+        <td>
+          <input style="width:50px;height:34px" [(ngModel)]="sale.packSize" placeholder="Pack" type="text" readonly>
+
+        </td>
+        <td>
+          <select placeholder="Batch" style="width:100px;height:34px" (change)="setMedicineDetails(sale);calcAmount(sale)" [(ngModel)]="sale.batchNo">
+                <!-- <option value=""></option>  -->
+                <option  *ngFor="let b of sale.batches" [value]="b">{{b}}</option>
+              </select>
+
+        </td>
+
+        <td>
+          <input style="width:130px;height:34px" [(ngModel)]="sale.expDate" placeholder="Exp date" type="text" readonly>
+
+        </td>
+
+        <td>
+          <input style="width:70px;height:34px" [(ngModel)]="sale.quantity" [disabled]="!sale.medicineName" (input)="calcAmount(sale)"
+            placeholder="Qty" type="number" (input)="setMedicineDetails(sale)">
+          <div class="text text-danger" *ngIf="sale.quantity_error">quantity is not available!</div>
+        </td>
+
+        <td>
+          <input style="width:70px;height:34px" [(ngModel)]="sale.Available" placeholder="Avaialble Qty" type="text" readonly>
+
+        </td>
+
+        <td>
+          <input style="width:70px;height:34px" [(ngModel)]="sale.mrp" placeholder="MRP" type="text" readonly>
+
+        </td>
+        <td>
+          <input style="width:50px;height:34px" [(ngModel)]="sale.discount" [disabled]="!sale.quantity" [value]="sale.discount||0"
+            (input)="calcAmount(sale)" placeholder="dis" type="number">
+        </td>
+        <td>
+          <input style="width:130px;height:34px" [value]="sale.amount || 0" placeholder="Amount" type="text" readonly>
+        </td>
+
+        <td>
+          <input style="width:50px;height:34px" [(ngModel)]="sale.gst" placeholder="GST" type="text" (keydown.tab)="addMore($event,sale)"
+            (keydown.enter)="addMore($event,sale)" readonly>
+        </td>
+        <td>
+          <a (click)="addMore($event)"><i class="fa fa-plus" style="font-size:18px;color:blue"></i></a>&nbsp;
+          <a *ngIf="refSales.length > 1" (click)="removeSaleItem(i);"><i class="fa fa-close" style="font-size:18px;color:red"></i></a>
+        </td>
+      </tr>
+
+
+
+    </table>
+
+  </div>
+
+</div>
+
+<ng-template #basic let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Save Particulars</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group ">
+          <div class="col-xl">
+            <mat-form-field>
+              <input [(ngModel)]="newSale.total" matInput placeholder="Total" type="text" readonly>
+
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+
+        <div class="form-group">
+          <div class="col-xl">
+            <mat-form-field>
+              <mat-select [(ngModel)]="newSale.paymentType" matInput placeholder="Type">
+                <mat-option *ngIf="patient.type==='INPATIENT'" value="Advance">Advance</mat-option>
+                <!-- <option value="Credit">Credit</option> -->
+                <mat-option value="Cash">Cash</mat-option>
+                <mat-option value="Card">Card</mat-option>
+                <mat-option value="Due">Due</mat-option>
+                <mat-option value="Cash+Card">Cash+Card</mat-option>
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="newSale.paymentType==='Cash+Card'||newSale.paymentType==='Card'" class="col-md-6">
+        <div class="form-group" style="padding-right:20 px;">
+          <div class="col-xl">
+            <label>Ref No: </label>
+
+
+            <input [(ngModel)]="newSale.referenceNumber" type="text">
+
+
+          </div>
+          <!--       
+            <div class="text text-danger" *ngIf="RegisterForm.controls['regFee'].touched && !RegisterForm.controls['regFee'].valid">Mandatory(if not entered)</div>
+      
+            <div class="text text-danger" *ngIf="RegisterForm.controls['regFee'].errors?.pattern">Allow only numbers</div>
+       -->
+
+        </div>
+      </div>
+
+      <div *ngIf="newSale.paymentType==='Cash+Card'" class="col-md-6">
+        <div class="form-group" style="padding-right:20 px;">
+          <div class="col-xl">
+            <label>CashAmount : </label>
+
+
+            <input required [(ngModel)]="this.cashamount" (input)="getcardamount()" type="text">
+
+
+          </div>
+          <!--       
+            <div class="text text-danger" *ngIf="RegisterForm.controls['regFee'].touched && !RegisterForm.controls['regFee'].valid">Mandatory(if not entered)</div>
+      
+            <div class="text text-danger" *ngIf="RegisterForm.controls['regFee'].errors?.pattern">Allow only numbers</div>
+       -->
+
+        </div>
+      </div>
+
+      <div *ngIf="newSale.paymentType==='Cash+Card'" class="col-md-6">
+        <div class="form-group" style="padding-right:20 px;">
+          <div class="col-xl">
+            <label>CardAmount: </label>
+
+
+            <input required [(ngModel)]="this.cardamount" (input)="getcashamount()" type="text">
+
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+  <div class="modal-footer">
+      <!-- modal.close('Save click') -->
+<!-- 
+    tabindex="0" -->
+    <button  type="button" class="btn btn-outline-dark"  [disabled]="saveInProgress" (click)="save()">Submit</button>
+    <button type="button" class="btn btn-outline-danger" (click)="modal.close('Save click');">Close</button>
+  </div>
+</ng-template>

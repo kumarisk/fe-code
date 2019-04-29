@@ -1,0 +1,49 @@
+<div style="padding-left: 10px;padding-top: 10px;padding-right: 10px;margin-bottom: 10px;">
+    <div class="fixHeader" id="myHeader">
+      <mat-card style="background-color: #03a9f4; color:white; padding: 7px;margin-right:15px">
+        <mat-card-title>REFERRAL LIST
+        </mat-card-title>
+      </mat-card>
+    </div>
+  </div>
+  
+  <div class="col-xl">
+    <div style="padding-left:10px;padding-right:10px">
+      <mat-card style="max-height: 50px; padding-top: 2px;margin-left:-18px">
+  
+        <mat-form-field style="width:150px;margin-top:-5px">
+  
+          <input [(ngModel)]="filter" matInput placeholder="SearchByName" type="text">
+        </mat-form-field>
+  
+      </mat-card>
+  
+      <div>
+      </div>
+      
+
+        <div style="margin-top:-10px;margin-left:-10px;margin-right:-10px">
+            <table width="100%" class="table table-striped table-condensed" style="overflow-y: scroll;
+      ;margin-left: -10px;">
+              <tbody style="font-size:11px;font-weight: bold">
+  <tr style="background:#03a9f4;color:whitesmoke">
+    <th>S.No</th>
+    <th>Referal</th>
+    <th>Doctor Name</th>
+    <th>Phone No</th>
+    <th>Address</th>
+  
+    </tr>
+    <tr ng-repeat="item in filteredData = (arr | filter:in | filter: sel)">
+    <tr  *ngFor="let data of All|filter: filter|paginate: { itemsPerPage: 15, currentPage: p };let i =index" >
+        <td> {{data.refId}}</td>
+        <td>{{data.source}}</td>
+        <td>{{data.refName}}</td>
+        <td>{{data.refPhone}}</td>
+        <td>{{data.refAdd}}</td>
+      
+    </tr>
+  </tbody>
+    </table>
+        </div>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>

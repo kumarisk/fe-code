@@ -1,0 +1,23 @@
+
+  .modal-body {
+    overflow-x: auto;
+  }
+  #value {
+    padding-right: 10px;
+    border-left: 10px;
+    border-right: 1px solid rgb(238, 231, 231);
+    height: 40px;
+  
+    /* margin-top: -5px; */
+  
+  }
+  #value {
+    padding-right: 10px;
+    border-left: 10px;
+    border-right: 1px solid rgb(110, 106, 106);
+    height: 40px;
+  
+    /* margin-top: -5px; */
+  
+  }
+  

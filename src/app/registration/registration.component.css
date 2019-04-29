@@ -1,0 +1,27 @@
+
+.test {
+  background-color: red;
+}
+.sticky{
+  position: fixed;
+  top: 0;
+  width: 80%;
+  z-index: 1000;
+  margin-top: -8px;
+}
+/* input{
+  text-transform:uppercase   
+} */
+
+.age-group-fields mat-form-field {
+  width:60px;
+}
+label.btn-primary.active { 
+  background-color: #005EFF !important;/* rgb(85, 48, 216) !important; */ 
+} 
+label.btn-primary.inactive { 
+  background-color: #0CCB0C !important;/* rgb(85, 48, 216) !important; */
+}
+span.selected-room { 
+  color :#005EFF !important;
+}

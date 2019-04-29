@@ -1,0 +1,8 @@
+/* input{
+    text-transform:uppercase   
+  } */ 
+  
+  .cdk-global-overlay-wrapper {
+    z-index: 1000;
+  }
+ 
